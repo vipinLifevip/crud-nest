@@ -7,17 +7,19 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { ValidationPipe } from '../validation/validation.pipe';
+import { createUserSchema, updateUserSchema } from './validation.schemas';
+import { User } from './user.model';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @UsePipes(new ValidationPipe(createUserSchema))
+  create(@Body() createUserDto: User) {
     return this.usersService.create(createUserDto);
   }
 

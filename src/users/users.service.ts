@@ -1,18 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from './user.model';
+
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    console.log(createUserDto, 'jdjdj');
-    return 'This action adds a new user';
+  private readonly logger = new Logger(UsersService.name);
+  constructor(@InjectModel('User') public userModel: Model<User>) { }
+
+  async create(createUserDto: User) {
+    const newUser = new this.userModel({
+      name: createUserDto.name,
+      age: createUserDto.age
+    })
+    newUser.save()
+    return newUser;
   }
 
-  findAll() {
-    const data = {
-      d: 'd',
-    };
-    return data;
+  async findAll() {
+    try {
+      let users= await this.userModel.find({})
+      return users;
+    } catch (error) {
+      this.logger.error(`Error retrieving users: ${error.message}`);
+      throw error;
+    }
+   
   }
 
   findOne(id: number) {
