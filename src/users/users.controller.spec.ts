@@ -19,7 +19,7 @@ describe('UsersController', () => {
             create: jest.fn(),
             // ...
           },
-        },],
+        },], 
     }).compile();
 
     controller = module.get<UsersController>(UsersController);

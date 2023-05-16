@@ -11,15 +11,19 @@ import {
 import { UsersService } from './users.service';
 import { ValidationPipe } from '../validation/validation.pipe';
 import { createUserSchema, updateUserSchema } from './validation.schemas';
-import { User } from './user.model';
+import { User } from './Models/user.model';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  private readonly usersService: UsersService;
+  constructor(usersService:UsersService) {
+    this.usersService=this.usersService
+  }
+  
 
   @Post()
   @UsePipes(new ValidationPipe(createUserSchema))
-  create(@Body() createUserDto: User) {
+  async create(@Body() createUserDto: User) {
     return this.usersService.create(createUserDto);
   }
 
